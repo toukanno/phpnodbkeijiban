@@ -1,24 +1,30 @@
 <?php
 session_start();
+require_once("func/header.php");
 $t = "";
 if (!isset($_SESSION['id'])) {
 	header('Location: login.php');
 	exit;
 }
-if (!isset($_POST['line_number'])) {
-	header('Location: login.php');
+if (!isset($_POST['textid'])) {
+	header('Location: top.php');
 	exit;
 }
 
 // 読み込み
 $handle = fopen("csv/text.csv", "r");
-$line_number = 0;
 $data = "";
 while ($line = fgets($handle)) {
-	$line_number++;
-	if ($_POST["line_number"] == $line_number) {
-		// 削除フラグとして先頭に-をつけることとした
-		$line = "-" . $line;
+	$lines = explode(",", $line);
+	if ($_POST['textid'] == $lines[0]) {
+		// 削除フラグとして行末に1をつけることとした
+		$line = $lines[0];
+		$line .= "," . trim($lines[1]); //最初の普通の投稿かもしくは返信内容か？
+		$line .= "," . $_SESSION['id'];
+		$line .= "," . $_POST["comment"];
+		$line .= "," . date('Y-m-d H:m:s');
+		$line .= "," . 1; //削除フラグ
+		$line .= PHP_EOL;
 	}
 	$data .= $line;
 }

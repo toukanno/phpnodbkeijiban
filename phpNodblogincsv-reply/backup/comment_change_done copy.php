@@ -4,8 +4,8 @@ if (!$_SESSION['id']) {
 	header('Location: login.php');
 	exit;
 }
-if (!$_POST['textid']) {
-	header('Location: top.php');
+if (!$_POST['line_number']) {
+	header('Location: login.php');
 	exit;
 }
 //postの値がからだったら送信できないようにもしたい
@@ -13,17 +13,15 @@ if (!$_POST['textid']) {
 // 読み込み
 if (!empty($_POST['comment'])) {
 	$handle = fopen("csv/text.csv", "r");
+	$line_number = 0;
 	$data = "";
 	while ($line = fgets($handle)) {
-		$lines = explode(",", $line);
-		if ($_POST['textid'] == $lines[0]) {
+		$line_number++;
+		if ($_POST["line_number"] == $line_number) {
 			// 編集
-			$line = $lines[0];
-			$line .= "," . trim($lines[1]); //最初の投稿か返信かどうか？
-			$line .= "," . $_SESSION['id'];
+			$line = $_SESSION['id'];
 			$line .= "," . $_POST["comment"];
 			$line .= "," . date('Y-m-d H:m:s');
-			$line .= "," . 0; //削除フラグ
 			$line .= PHP_EOL;
 		}
 		$data .= $line;

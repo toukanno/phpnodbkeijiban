@@ -28,38 +28,27 @@ function getLoginUser($session_id)
 }
 $user = getLoginUser($_SESSION['id']);
 
-function getUserText($flg)
-{
-	$handle = fopen("csv/text.csv", "r");
-	while ($line = fgets($handle)) {
-		$column = explode(",", $line);
-		if ($flg > 0) {
-			continue;
-		}
-		$user2["textid"] = trim($column[0]);
-		$user2["textflg"] = trim($column[1]);
-		$user2["id"] = trim($column[2]);
-		$user2["comment"] = trim($column[3]);
-		$user2["date"] = trim($column[4]);
-		$user2["deleteflg"] = trim($column[5]);
-		$value[] = $user2;
-		return $user2;
-	}
-	return false;
-}
-// $flg = 7;
-// $user2 = getUserText($flg);
-// print_r($user2);
-// print_r($user2["textid"]);
-// print_r($user2["textflg"]);
-// print_r($user2["id"]);
-// print_r($user2["name"]);
-// print_r($user2["date"]);
-// print_r($user2["deleteflg"] );
+// function getUserText()
+// {
+// 	$handle = fopen("csv/text.csv", "r");
+// 	while ($line = fgets($handle)) {
+// 		$column = explode(",", $line);
+// 		$user2["textid"] = trim($column[0]);
+// 		$user2["textflg"] = trim($column[1]);
+// 		$user2["id"] = trim($column[2]);
+// 		$user2["name"] = trim($column[3]);
+// 		$user2["date"] = trim($column[4]);
+// 		$user2["deleteflg"] = trim($column[5]);
+// 		$value[] = $user2;
+// 		return $user2;
+
+// 	}
+// 	return false;
+// }
+// $user2 = getUserText();
 
 ?>
 <title>テキストテーブル</title>
-
 <body>
 	<div class="container">
 		<h1>トップページ</h1>
@@ -76,40 +65,12 @@ function getUserText($flg)
 				<input type="submit" value="投稿" class="btn btn-primary">
 			</form>
 		</div>
+
 		<div class="row">
 			<?php
-			$handle = fopen("csv/text.csv", "r");
-			while ($line = fgets($handle)) {
-				$lines = explode(",", $line);
-				$value[] = $line;
-				$textids[] = $lines[0];
-				$textflgs[] = trim($lines[1]);
-			}
-			foreach ($value as $key => $val1) {
-				if ($val1[1] == 0) {
-					$b[] = $val1;
-			
-					foreach ($value as $key2 => $val2) {
-						
-						if ($val1[0] == trim($val2[1])) {
-							$b[] = $val2;
-						}
-					}
-				}
-			}
-			$value = $b;
-			// print_r($value);
-			print_r($b);
-			// foreach ($textids as $keyid => $textid) {
-			// 	// print_r($textid);
-			// }
-			// foreach ($textflgs as $keyflg => $textflg) {
-			// 	print_r($textflg);
-			// }
-
-
 			//読み取り専用でファイルを開く
 			$handle = fopen("csv/text.csv", "r");
+
 			//  テーブルのHTMLを生成
 			echo "<table class='table'>
   <thead class='thead-light'>
@@ -125,6 +86,7 @@ function getUserText($flg)
     </tr>
   </thead>
   ";
+
 			//  csvのデータを配列に変換し、HTMLに埋め込んでいる
 			//fgetで値を一行ずつ取得する
 
@@ -132,7 +94,7 @@ function getUserText($flg)
 			// $textid = 0;
 
 			// 自分自身のCSVの内容を表示
-			// $textids = array();
+		
 			while ($line = fgets($handle)) {
 
 				// 削除したコメントは非表示にする。1が削除されたコメント。
@@ -155,27 +117,10 @@ function getUserText($flg)
 					$login_id = getLoginUser($id)["login_id"];
 					$name = getLoginUser($id)["name"];
 				}
-				$textid = "-";
-				$textflg = "-";
-				// if (getUserText($flg)) {
-				// 	$textid = getUserText($flg)['textid'];
-				// 	$textflg = getUserText($flg)['textflg'];
-				// 	$comment = getUserText($flg)['comment'];
-				// $textflg = getUserText($flg)['textflg'];
-				// $textflg = getUserText($flg)['textflg'];
-				// }
-				$value[] = $line;
 				$textid = $lines[0];
-				$textids[] = $lines[0];
 				$textflg = trim($lines[1]);
-				$textflgs[] = trim($lines[1]);
-				$id = trim($lines[2]);
-
-				$date = trim($lines[4]);
-				$deleteflg = trim($lines[5]);
 				$comment = trim($lines[3]);
 				$datetime = trim($lines[4]);
-				// $value = array($textid, $textflg, $id, $name, $date, $deleteflg, $comment, $datetime);
 
 				echo "<tr>";
 				echo "<td>" . $textid . "</td>";
@@ -216,20 +161,12 @@ function getUserText($flg)
 				echo "</td>";
 
 				echo "</tr>";
-				// print_r($textids);
 			}
 			echo "</table>";
-			// fclose($handle);
-			// print_r($textids); //削除フラグ以外のtextidを取り出せる
-			// print_r($textflgs); //削除フラグ以外のtextflgを取り出せる
-			// // print_r($value);
-			// foreach ($textids as $val) {
-			// 	if (in_array($val, $textflgs)) {
-			// 		echo $val . "←このtextidへの返信内容があります(削除フラグがついていない内容への)。";
-			// 	}
-			// }
-			// print_r($textid);
-			// print_r($textflg);
+
+
+			// #4 ファイルを閉じる
+			fclose($handle);
 			?>
 		</div>
 	</div>
